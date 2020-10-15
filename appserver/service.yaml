@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes4oe-pas-service
+  namespace: default
+spec:
+  # externalTrafficPolicy: Cluster
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8810
+    # nodePort: 30321
+  selector:
+    app: kubernetes4oe
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: "34.91.118.138"

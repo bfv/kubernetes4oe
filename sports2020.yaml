@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubernetes4oe-db
+  labels:
+    name: kubernetes4oe-db
+    type: db
+spec:
+  containers:
+  - name: sports2020-db
+    image: eu.gcr.io/kubernetes4oe/sports2020-db
+    ports:
+      - containerPort: 10000
+        name: minus-s
+        protocol: TCP
+      - containerPort: 10010
+        name: server-1
+        protocol: TCP
+      - containerPort: 10011
+        name: server-2
+        protocol: TCP
+      - containerPort: 10012
+        name: server-3
+        protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kubernetes4oe
+    component: db
+    name: kubernetes4oe-db
+  name: kubernetes4oe-db
+  namespace: default
+spec:
+  ports:
+  - name: port-1
+    port: 10000
+    protocol: TCP
+    targetPort: 10000
+  - name: port-2
+    port: 10010
+    protocol: TCP
+    targetPort: 10010
+  - name: port-3
+    port: 10011
+    protocol: TCP
+    targetPort: 10011
+  - name: port-4
+    port: 10012
+    protocol: TCP
+    targetPort: 10012
+  selector:
+    name: kubernetes4oe-db
+    type: db
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: kubernetes4oe-pas
+spec:
+  replicas: 3  # tells deployment to run 3 pods matching the template
+  selector:
+    matchLabels:
+      app: kubernetes4oe
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kubernetes4oe
+        component: appserver
+    spec:
+      containers:
+      - name: kubernetes4oe-pas
+        image: eu.gcr.io/kubernetes4oe/kubernetes4oe-pas
+        resources:
+          requests: 
+            cpu: "125m"
+            memory: "384Mi"
+          limits:
+            cpu: "250m"
+            memory: "512Mi"
+        ports:
+        - containerPort: 8810
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes4oe-pas-service
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8810
+  selector:
+    app: kubernetes4oe
+  sessionAffinity: None
+  type: LoadBalancer
+  loadBalancerIP: "34.91.118.138"

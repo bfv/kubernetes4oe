@@ -1,0 +1,10 @@
+
+client/*
+appserver/*
+legacy/*
+sports2020db/*
+
+!sports2020.yaml
+!appserver/*.yaml
+!sports2020db/*.yaml
+
