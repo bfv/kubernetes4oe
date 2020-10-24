@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: sports2020-db
-    image: eu.gcr.io/kubernetes4oe/sports2020-db
+    image: eu.gcr.io/kubernetes4oe/sports2020-db:1.0.0
     ports:
       - containerPort: 10000
         name: minus-s
@@ -75,7 +75,7 @@ spec:
     spec:
       containers:
       - name: kubernetes4oe-pas
-        image: eu.gcr.io/kubernetes4oe/kubernetes4oe-pas
+        image: eu.gcr.io/kubernetes4oe/kubernetes4oe-pas:1.0.0
         resources:
           requests: 
             cpu: "125m"
