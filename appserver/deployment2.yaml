@@ -8,7 +8,9 @@ spec:
     matchLabels:
       app: kubernetes4oe
   strategy:
-    type: Recreate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   template:
     metadata:
       labels:
