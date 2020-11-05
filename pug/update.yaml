@@ -1,0 +1,37 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: kubernetes4oe-pas
+spec:
+  replicas: 3  # tells deployment to run 1 pods matching the template
+  selector:
+    matchLabels:
+      app: kubernetes4oe
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: kubernetes4oe
+        component: appserver
+    spec:
+      containers:
+      - name: kubernetes4oe-pas
+        image: eu.gcr.io/kubernetes4oe/kubernetes4oe-pas:2.0.0
+        resources:
+          requests: 
+            cpu: "125m"
+            memory: "384Mi"
+          limits:
+            cpu: "250m"
+            memory: "512Mi"
+        ports:
+        - containerPort: 8810
+        env:
+        - name: OE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: as-config
+              key: envname
